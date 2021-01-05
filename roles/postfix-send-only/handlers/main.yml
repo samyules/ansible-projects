@@ -1,0 +1,8 @@
+# Handlers for postfix send only role
+---
+
+- name: restart postfix
+  service:
+    name: postfix
+    status: restarted
+

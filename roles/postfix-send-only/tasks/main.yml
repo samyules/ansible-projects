@@ -1,0 +1,27 @@
+# tasks for postfix send only role
+---
+
+- name: ensure that postfix is installed
+  package:
+    name: postfix
+    state: present
+  become: true
+
+- name: Update Postfix config
+  lineinfile:
+    dest: "{{ postfix_config_file }}"
+    line: "{{ item.name }} = {{ item.value }}"
+    regexp: "^{{ item.name }} ="
+    mode: 0644
+  with_items:
+    - name: inet_interfaces
+      value: "{{ postfix_inet_interfaces }}"
+    - name: inet_protocols
+      value: "{{ postfix_inet_protocols }}"
+  notify: restart postfix
+
+- name: Ensure Postfix is started and enabled at boot
+  service:
+    name: postfix
+    state: started
+    enabled: true
